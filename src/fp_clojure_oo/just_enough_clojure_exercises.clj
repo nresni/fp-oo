@@ -77,34 +77,103 @@
 ;; DROP and DROP-LAST
 ;; Return the middlemost 2 elements of an even-element sequence.
 ;; (middlemost [1 2 3 4 5 6]) => (3 4)
+(def trim
+  (fn [seq]
+    (/ (- (count seq) 2) 2)))
+(trim [1 2 3 4])
+(trim [1 2 3 4 5])
+(trim [1 2 3 4 5 6])
+
+(def middlemost
+  (fn [seq]
+    (drop-last (trim seq)
+               (drop (trim seq) seq))))
+(middlemost [1 2 3 4])
+(middlemost [1 2 3 4 5])
+(middlemost [1 2 3 4 5 6])
+(middlemost [1 2 3 4 5 6 7])
 
 ;; FLATTEN
 ;; Add the elements of a sequence of elements without using `cons`
 ;; [+ [3 [5 6] 4]] => 18
+(apply + [3 5 6 4])
+(flatten [+ [3 [5 6] 4]])
+
+(cons + [3 5 6 4])
+(eval
+  (cons + [3 5 6 4]))
+
+(eval (flatten [+ [3 [5 6] 4]]))
+
+(def flattens
+  (fn [seq]
+    (eval (flatten seq))))
+(flattens [+ [3 [5 6] 4]])
 
 ;; PARTITION
 ;; Convert (1 2 3 4) into (3 4 1 2)
+(def partitions
+  (fn [seq]
+    (flatten (reverse
+               (partition 2 seq)))))
+(partitions [1 2 3 4])
 
 ;; EVERY?
 ;; Is ( () () () )  a list of empty lists?
+(every? empty? '( () () () ))
+(every? empty? '( (A) () () ))
 
 ;; REMOVE
 ;; Remove all the nil values from a sequence
+(def remove-nil
+  (fn [seq]
+    (remove nil? seq)))
+(remove-nil [1 nil 2 nil 3 nil])
 
 ;; #6
 ;; Returns true if the elements in the elements in the candidate are the first elements in the sequence
 ;; (prefix-of? [1 2] [1 2 3 4]) => true
 ;; (prefix-of? '(2 3) [1 2 3 4]) => false
 ;; (prefix-of? '(1 2) [1 2 3 4]) => true
+(def prefix-of?
+  (fn [cand seq]
+    (= (take (count cand) seq) cand)))
+(prefix-of? [1 2] [1 2 3 4])
+(prefix-of? '(2 3) [1 2 3 4])
+(prefix-of? '(1 2) [1 2 3 4])
 
 ;; #7
 ;; Returns a sequence of successively smaller subsequences of the argument
 ;; (tails '(1 2 3 4)) => ((1 2 3 4) (2 3 4) (3 4) (4) ())
+(drop 0 '(1 2 3))
+(drop 1 '(1 2 3))
+(drop 2 '(1 2 3))
+(drop 3 '(1 2 3))
+
+(map drop
+     '(0 1 2 3)
+     '((1 2 3) (1 2 3) (1 2 3) (1 2 3)))
+
+(map drop
+     '(0 1 2 3)
+     (repeat (inc (count '(1 2 3))) '(1 2 3)))
+
+(def tails
+  (fn [seq]
+    (map drop
+         (range (inc (count seq)))
+         (repeat (inc (count seq)) seq))))
+
+(tails '(1 2 3))
 
 ;; #8
 ;; In the first exercise in the chapter, I asked you to complete this function
 ;; (def second (fn [list] ____))
 ;; (puzzle '(1 2 3)) => list is a core function substitution => fn [(1 2 3)] ((1 2 3) (1 2 3)) where is a function ?
+(def puzzle
+  (fn [list] (list list)))
+(puzzle '(1 2 3))
+
 
 
 
