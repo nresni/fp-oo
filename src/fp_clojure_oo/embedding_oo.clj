@@ -79,4 +79,3 @@
 (valid-triangle? (make Point 0 0) (make Point 0 1))
 (valid-triangle? (make Point 0 0) (make Point 0 0) (make Point 3 4))
 (valid-triangle? (make Point 0 0) (make Point 0 3) (make Point 3 0))
-
